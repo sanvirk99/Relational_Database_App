@@ -1,0 +1,2 @@
+Database
+-psql -h localhost -U postgres

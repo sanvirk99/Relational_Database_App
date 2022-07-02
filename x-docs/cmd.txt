@@ -1,2 +1,90 @@
 Database
 -psql -h localhost -U postgres
+connects to localhost database wiht username postgres will require password
+
+
+CREATE TABLE Equipment(Equipment_ID PRIMARY KEY,Type VARCHAR ( 50 ) UNIQUE NOT NULL,);
+
+CREATE TABLE Equipment(
+   equipment_id serial PRIMARY KEY,
+   type VARCHAR ( 50 ) NOT NULL
+);
+
+INSERT INTO Equipment(type) 
+VALUES('ammunition');
+
+INSERT INTO Equipment(type) 
+VALUES('protective');
+
+INSERT INTO Equipment(type) 
+VALUES('electroninc');
+
+INSERT INTO Equipment(type) 
+VALUES('unclassified');
+
+
+CREATE TABLE Equipment(
+   equipment_id serial PRIMARY KEY,
+   type VARCHAR ( 50 ) NOT NULL
+);
+
+CREATE TABLE Prison(
+   cell serial PRIMARY KEY,
+   max_capacity smallint NOT NULL,
+   current_capacity smallint Not NULL
+);
+
+INSERT INTO Prison(cell,max_capacity,current_capacity) 
+VALUES(default,'10','0');
+
+CREATE TABLE Locked_In(
+   cell smallint,
+   suspect_id smallint ,
+   PRIMARY KEY(cell,suspect_id),
+      FOREIGN KEY(suspect_id) 
+	  	REFERENCES Suspect(suspect_id),
+	 FOREIGN KEY(cell) 
+	  	REFERENCES Prison(cell),	
+);
+
+CREATE TABLE Suspect(
+   suspect_id serial PRIMARY KEY,
+   name VARCHAR ( 50 ),
+   birth_date DATE,
+   height_cm smallint ,
+   eye_colour VARCHAR ( 50 ),
+   address VARCHAR ( 60 )
+  
+);
+
+INSERT INTO Suspect (suspect_id,name,birth_date,height_cm,eye_colour,address)
+VALUES (default,'Raju Kumar', '1996-12-02','180','brown','unit-street-city-province-country-postalcode'),
+       (default,'Nikhil Aggarwal', '1997-08-24','180','brown','unit-street-city-province-country-postalcode' ),
+       (default,'Anshul Aggarwal', '1994-05-11','180','brown','unit-street-city-province-country-postalcode' ),
+	   (default,'Bob Aggarwal', '2000-08-24','180','grey', 'unit-street-city-province-country-postalcode'),
+	   (default,'Bam Aggarwal', '2000-08-24','180','brown', 'unit-street-city-province-country-postalcode');
+	   
+CREATE TABLE Locked_up(
+   suspect_id serial PRIMARY KEY,
+   locked_in_cell smallint NOT NULL,
+   date_locked DATE NOT NULL,
+   locked_time TIME,
+   days_locked smallint,
+   hours_locked TIME,
+   FOREIGN KEY(locked_in_cell) 
+	  	REFERENCES Prison(cell),
+	FOREIGN KEY(suspect_id) 
+	  	REFERENCES suspect(suspect_id)  
+);
+
+
+INSERT INTO Locked_up(suspect_id,locked_in_cell,date_locked,locked_time,days_locked,hours_locked)
+VALUES ('1','1', '2022-07-01',NULL,NULL,NULL ),
+		('2','1' ,'2022-07-01','09:00:00',2,'12:00:00'),
+		('3','1', '2022-07-01',NULL,NULL,NULL ),
+		('4','1', '2022-07-01',NULL,NULL,NULL ),
+		('5','1', '2022-07-01',NULL,NULL,NULL );
+		
+       
+INSERT INTO Suspect (suspect_id,name,birth_date,height_cm,eye_colour,address,locked_in_cell)
+VALUES (default,'Raju Kumar', '1996-12-02','180','brown','unit-street-city-province-country-postalcode','7' );

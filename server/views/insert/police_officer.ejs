@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    
+   
+    <form action="/insert_officer" method="post">
+        <fieldset>
+            <h3>Enter goverment ID associsated info with officer </h3>
+        <label for="fname">Driver Licence Number :</label>
+        <input type="text" name="licence"  maxlength="7"><br>
+
+        <label for="fname">Enter Name on Driver Licence :</label>
+        <input type="text" name="name" maxlength="40"><br>
+
+        <label for="fdate">Birth Date on Driver Licence :</label>
+        <input type="date" name="birth_date"
+        value="2000-07-22"
+        min="1950-01-01" max="2005-12-31"><br>
+
+        <label for="fheight">Height on Driver Licence :</label>
+
+        <input type="number" value="180" name="height"
+        min="120" max="250"><br>
+
+        <label for="feye_colour">Eye colour on Driver Licence :</label>
+        <input type="text" name="eye_colour" maxlength="7"><br>
+
+
+        <label for="feye_colour"> Address on Driver Licence:</label>
+        <input type="text"  maxlength="56" placeholder="unit-street-city-province-country-postalcode"><br>
+
+
+        <h3>Enter work related info of officer</h3>
+
+        <label for="fname">Enter Duty Name :</label>
+        <input type="text" name="duty_name" maxlength="40"><br>
+
+        <label for="fname">Enter Rank :</label>
+        <input type="text" name="duty_rank" value="constable" maxlength="40"><br>
+
+        <input type="submit">
+
+
+
+
+        </fieldset>
+        
+    </form>
+
+
+
+</body>
+</html>

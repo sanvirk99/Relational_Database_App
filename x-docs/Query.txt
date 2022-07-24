@@ -1,0 +1,23 @@
+CREATE TABLE driver_licence(
+
+   driver_l VARCHAR(20) PRIMARY KEY,
+   name VARCHAR ( 50 ),
+   birth_date DATE,
+   height_cm smallint ,
+   eye_colour VARCHAR ( 50 ),
+   address VARCHAR ( 60 )
+
+)
+
+INSERT INTO driver_licence (driver_l,name,birth_date,height_cm,eye_colour,address)
+VALUES ('3456334','Bob Jones', '1996-12-02','180','brown','unit-street-city-province-country-postalcode');
+
+INSERT INTO driver_licence (driver_l,name,birth_date,height_cm,eye_colour,address)
+VALUES ('3456335','Kane Kirk', '1996-12-02','180','brown','unit-street-city-province-country-postalcode');
+
+INSERT INTO driver_licence (driver_l,name,birth_date,height_cm,eye_colour,address)
+VALUES ('3456336','Jack Frag', '1996-12-02','180','brown','unit-street-city-province-country-postalcode'),
+('3456337','Alex Hook', '1996-12-02','180','brown','unit-street-city-province-country-postalcode'),
+('3456338','George Bush', '1996-12-02','180','brown','unit-street-city-province-country-postalcode');
+
+

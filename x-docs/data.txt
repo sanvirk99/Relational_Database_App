@@ -1,0 +1,188 @@
+INSERT INTO Equipment(type) 
+VALUES 
+	('ammunition'),
+	('protective'),
+	('electroninc'),
+	('unclassified'),
+	('transportation');
+
+INSERT INTO Suspect (name,birth_date,height_cm,eye_colour,address)
+VALUES ('Raju Kumar', '1996-12-02','180','brown','unit-street-city-province-country-postalcode'),
+       ('Nikhil Aggarwal', '1997-08-24','180','brown','unit-street-city-province-country-postalcode' ),
+       ('Anshul Aggarwal', '1994-05-11','180','brown','unit-street-city-province-country-postalcode' ),
+	   ('Bob Aggarwal', '2000-08-24','180','grey', 'unit-street-city-province-country-postalcode'),
+	   ('Bam Aggarwal', '2000-08-24','180','brown', 'unit-street-city-province-country-postalcode');
+	   
+INSERT INTO Prison(max_capacity,current_capacity) 
+VALUES
+	('10','0'),
+	('11','2'),
+	('14','5'),
+	('1','0'),
+	('6','3');
+
+INSERT INTO police_officer
+  (badge, driver_l,duty_name,rank_name)
+VALUES
+  (nextval('badge_sequence'), null,'Bob Jones','constable');
+
+INSERT INTO Locked_up(suspect_id,locked_in_cell,date_locked,locked_time,days_locked,hours_locked)
+VALUES ('1',null, '2022-07-01',NULL,NULL,NULL ),
+		('2',null ,'2022-07-01','09:00:00',2,'12:00:00'),
+		('3',null, '2022-07-01',NULL,NULL,NULL ),
+		('4',null, '2022-07-01',NULL,NULL,NULL ),
+		('5',null, '2022-07-01',NULL,NULL,NULL );
+
+INSERT INTO driver_licence (driver_l,name,birth_date,height_cm,eye_colour,address)
+VALUES ('3456334','Raju Kumar', '1996-12-02','180','brown','unit-street-city-province-country-postalcode');
+
+INSERT INTO driver_licence (driver_l,name,birth_date,height_cm,eye_colour,address)
+VALUES ('3456335','Raju Kumar', '1996-12-02','180','brown','unit-street-city-province-country-postalcode');
+
+INSERT INTO driver_licence (driver_l,name,birth_date,height_cm,eye_colour,address)
+VALUES ('3456336','Raju Kumar', '1996-12-02','180','brown','unit-street-city-province-country-postalcode'),
+('3456337','Raju Kumar', '1996-12-02','180','brown','unit-street-city-province-country-postalcode'),
+('3456338','Raju Kumar', '1996-12-02','180','brown','unit-street-city-province-country-postalcode');
+
+INSERT INTO equipment_checkout
+  (equipment_id, checkout_officer,ts)
+VALUES
+  (1, '123458',NOW());
+  
+INSERT INTO equipment_checkout
+  (equipment_id, checkout_officer,ts)
+VALUES
+  (2, '123460',NOW()),
+  (3, '123461',NOW()),
+  (4, '123462',NOW()),
+  (5, '123463',NOW());
+
+INSERT INTO logs_suspect
+	(officer,suspect_id,ts)
+VALUES
+  (123458, '1',NOW()),
+  (123458, '2',NOW()),
+  (123462, '3',NOW()),
+  (123462, '4',NOW()),
+  (123463, '5',NOW());
+
+INSERT INTO crime
+	(crime_id,description,cordinates)
+VALUES
+  (default,'voilence on property','49.181004, -122.802756');
+
+INSERT INTO crime
+	(crime_id,description,cordinates)
+VALUES
+  (default,'grand theft','49.181004, -122.802752'),
+  (default,'hit and run','49.181004, -122.802757'),
+  (default,'robbery from building','49.181004, -122.802786'),
+  (default,'illegal fire','49.181004, -122.802782'); 
+
+INSERT INTO investigates
+	(crime_id,officer,ts)
+VALUES
+  ('1','123458',NOW()),
+  ('2','123460',NOW()),
+  ('3','123461',NOW()),
+  ('4','123462',NOW()),
+  ('5','123463',NOW());
+
+INSERT INTO suspect_crime
+	(suspect_id,crime_id,role_description)
+VALUES
+  ('1','1','intiated the fight');
+  
+INSERT INTO suspect_crime
+	(suspect_id,crime_id,role_description)
+VALUES
+  ('2','1','involved in the fight'),
+  ('3','1','involved in the fight'),
+  ('4','1','involved in the fight'),
+  ('5','1','involved in the fight');
+
+INSERT INTO goverment_officer
+	(goverment_id,duty_name)
+VALUES
+	(nextval('goverment_sequence'),'Raj Kirk');
+	
+INSERT INTO goverment_officer
+	(goverment_id,duty_name)
+VALUES
+	(nextval('goverment_sequence'),'Bobby Kirk'),
+	(nextval('goverment_sequence'),'Jagga Virk'),
+	(nextval('goverment_sequence'),'Gaggu GILL'),
+	(nextval('goverment_sequence'),'Sidhu Moosa');
+
+INSERT INTO oversees
+	(goverment_id,crime_id,badge,description)
+VALUES
+  ('1234','1','123458','Dispatch Operator Overseeing');
+
+INSERT INTO oversees
+	(goverment_id,crime_id,badge,description)
+VALUES
+  ('1234','2','123460','Dispatch Operator Overseeing'),
+  ('1234','3','123461','Dispatch Operator Overseeing'),
+  ('1234','4','123462','Dispatch Operator Overseeing'),
+  ('1234','5','123463','Dispatch Operator Overseeing');
+
+INSERT INTO evidence
+	(evidence_id,description,crime_id)
+VALUES
+  (default,'blood on baseball bat','1');
+
+INSERT INTO evidence
+	(evidence_id,description,crime_id)
+VALUES
+  (default,'blood on hockey stick','1');
+
+INSERT INTO officer_evidence
+	(badge,evidence_id,date,time)
+VALUES
+  ('123458','1','2022-07-02','7:05:06 PST');
+
+INSERT INTO evidence_storage
+	(evidence_id,aisle,shelf,position)
+VALUES
+  ('1',1,1,1);
+  
+INSERT INTO evidence_storage
+	(evidence_id,aisle,shelf,position)
+VALUES
+  ('2',1,1,2);
+
+INSERT INTO isa_detective
+	(badge,speciality_description)
+VALUES
+  ('123458','domestisic crime');
+
+INSERT INTO evidence_accesses
+	(evidence_id,detective_badge,ts)
+VALUES
+  ('1','123458',NOW());
+
+INSERT INTO evidence_accesses
+	(evidence_id,detective_badge,ts)
+VALUES
+  ('2','123458',NOW());
+
+INSERT INTO office_worker
+	(badge,desk_num)
+VALUES
+  ('123458',default);
+
+INSERT INTO office_review
+	(badge,complaint_id,ts)
+VALUES
+  ('123458','1',NOW());
+
+INSERT INTO complaint
+	(complaint_id,contact_info,description)
+VALUES
+  (default,'604-xxx-xxxx','loud neighbour');
+
+INSERT INTO rookie
+	(training_officer,rookie_id,duty_name)
+VALUES
+  ('123458',default,'Harry');

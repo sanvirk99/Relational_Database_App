@@ -1,0 +1,204 @@
+CREATE TABLE Equipment(
+   equipment_id serial PRIMARY KEY,
+   type VARCHAR ( 50 ) NOT NULL
+);
+
+CREATE TABLE Prison(
+   cell serial PRIMARY KEY,
+   max_capacity smallint NOT NULL,
+   current_capacity smallint Not NULL
+);
+
+CREATE TABLE Suspect(
+   suspect_id serial PRIMARY KEY,
+   name VARCHAR ( 50 ),
+   birth_date DATE,
+   height_cm smallint ,
+   eye_colour VARCHAR ( 50 ),
+   address VARCHAR ( 60 )
+  
+);
+
+CREATE TABLE driver_licence(
+   driver_l VARCHAR(20) PRIMARY KEY,
+   name VARCHAR ( 50 ),
+   birth_date DATE,
+   height_cm smallint ,
+   eye_colour VARCHAR ( 50 ),
+   address VARCHAR ( 60 )
+);
+
+CREATE TABLE crime(
+	crime_id serial PRIMARY KEY,
+	description VARCHAR(100),
+	cordinates POINT 
+);
+
+CREATE TABLE goverment_officer(
+    goverment_id VARCHAR(15) PRIMARY KEY,
+    duty_name VARCHAR(50)
+);
+
+CREATE TABLE complaint(
+	complaint_id SERIAL PRIMARY KEY,
+	contact_info VARCHAR(50),
+	description VARCHAR(100) NOT NULL
+);
+
+CREATE TABLE Locked_up(
+   suspect_id serial PRIMARY KEY,
+   locked_in_cell smallint NOT NULL,
+   date_locked DATE NOT NULL,
+   locked_time TIME,
+   days_locked smallint,
+   hours_locked TIME,
+   FOREIGN KEY(locked_in_cell) 
+	  	REFERENCES Prison(cell),
+	FOREIGN KEY(suspect_id) 
+	  	REFERENCES suspect(suspect_id)  
+);
+
+CREATE TABLE police_officer(
+	
+   badge VARCHAR(20) PRIMARY KEY,
+   driver_l VARCHAR(20) UNIQUE NOT NULL,
+   duty_name VARCHAR(50),
+   rank_name VARCHAR(20),
+   FOREIGN KEY(driver_l)
+		REFERENCES driver_licence(driver_l) 
+);
+
+CREATE TABLE equipment_checkout(
+
+	equipment_id INT UNIQUE NOT NULL,
+	checkout_officer VARCHAR ( 20 ) NOT NULL,
+	ts TIMESTAMP,
+	FOREIGN KEY(checkout_officer)
+		REFERENCES police_officer(badge) 
+);
+
+CREATE TABLE logs_suspect(
+
+	officer VARCHAR(20) NOT NULL,
+	suspect_id INT PRIMARY KEY,
+	ts TIMESTAMP NOT NULL,
+	FOREIGN KEY(officer)
+		REFERENCES police_officer(badge),
+	FOREIGN KEY(suspect_id)
+		REFERENCES suspect(suspect_id)
+);
+
+CREATE TABLE investigates(
+	crime_id INT NOT NULL,
+	officer VARCHAR(20) NOT NULL, 
+	ts TIMESTAMP,
+	PRIMARY KEY(crime_id,officer),
+	FOREIGN KEY(crime_id)
+		REFERENCES crime(crime_id),
+	FOREIGN KEY(officer)
+		REFERENCES police_officer(badge)
+);
+
+CREATE TABLE suspect_crime(
+	suspect_id INT NOT NULL,
+	crime_id INT NOT NULL, 
+	role_description VARCHAR(100),
+	PRIMARY KEY(suspect_id,crime_id),
+	FOREIGN KEY(suspect_id)
+		REFERENCES suspect(suspect_id),
+	FOREIGN KEY(crime_id)
+		REFERENCES crime(crime_id)
+);
+
+
+CREATE TABLE oversees(
+	
+	goverment_id VARCHAR(15) NOT NULL,
+	crime_id INT NOT NULL, 
+	badge VARCHAR(20) NOT NULL,
+	description VARCHAR(100),
+	PRIMARY KEY(goverment_id,crime_id,badge),
+	FOREIGN KEY(goverment_id)
+		REFERENCES goverment_officer(goverment_id),
+	FOREIGN KEY(crime_id,badge)
+		REFERENCES investigates(crime_id,officer)
+);
+
+CREATE TABLE evidence (
+ 	
+	 evidence_id SERIAL PRIMARY KEY,
+	 description VARCHAR(100),	
+	 crime_id INT,
+	 FOREIGN KEY(crime_id)
+	 	REFERENCES crime(crime_id)
+);
+
+CREATE TABLE officer_evidence (
+	badge VARCHAR(20) NOT NULL,
+	evidence_id INT UNIQUE NOT NULL,
+	date DATE,
+	time TIME,
+	FOREIGN KEY (badge)
+		REFERENCES police_officer(badge),
+	FOREIGN KEY (evidence_id)
+		REFERENCES evidence(evidence_id)
+);
+
+CREATE TABLE evidence_storage(
+	evidence_id INT UNIQUE NOT NULL,
+	aisle SMALLINT,
+	shelf SMALLINT,
+	position SMALLINT,
+	PRIMARY KEY(aisle,shelf,position),
+	FOREIGN KEY(evidence_ID)
+		REFERENCES evidence(evidence_id)	
+);
+
+CREATE TABLE isa_detective(
+	
+	badge VARCHAR(20) UNIQUE NOT NULL,
+	speciality_description VARCHAR(200),
+	FOREIGN KEY(badge) REFERENCES police_officer(badge)
+);
+
+CREATE TABLE evidence_accesses(
+	evidence_id INT NOT NULL,
+	detective_badge VARCHAR(20) NOT NULL,
+	ts TIMESTAMP,
+	FOREIGN KEY(evidence_id) REFERENCES evidence(evidence_id),
+	FOREIGN KEY(detective_badge) REFERENCES isa_detective(badge)
+);
+
+CREATE TABLE office_worker(
+	badge VARCHAR(20) UNIQUE NOT NULL,
+	desk_num SERIAL PRIMARY KEY,
+	FOREIGN KEY (badge) REFERENCES police_officer(badge)
+);
+
+CREATE TABLE office_review(
+	badge VARCHAR(20) NOT NULL,
+	complaint_id SERIAL NOT NULL,
+	ts TIMESTAMP,
+	FOREIGN KEY (badge) REFERENCES office_worker(badge),
+	FOREIGN KEY (complaint_id) REFERENCES complaint(complaint_id)
+);
+
+CREATE TABLE rookie(
+	training_officer VARCHAR(20) NOT NULL,
+	rookie_id SERIAL PRIMARY KEY,
+	duty_name VARCHAR(50) NOT NULL,
+	FOREIGN KEY (training_officer) REFERENCES police_officer(badge)
+);
+
+CREATE TABLE Locked_up(
+   suspect_id serial PRIMARY KEY,
+   locked_in_cell smallint NOT NULL,
+   date_locked DATE NOT NULL,
+   locked_time TIME,
+   days_locked smallint,
+   hours_locked TIME,
+   FOREIGN KEY(locked_in_cell) 
+	  	REFERENCES Prison(cell),
+	FOREIGN KEY(suspect_id) 
+	  	REFERENCES suspect(suspect_id)  
+);

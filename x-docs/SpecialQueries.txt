@@ -1,0 +1,80 @@
+
+
+/* Join Query */
+
+/* Names of all the suspects that are locked up in Cell no. 1 
+(Join the Suspects and Locked Up table to find the name(s) of the suspect(s) in cell no. 1*/
+
+/*
+SELECT suspect.name
+FROM suspect, locked_up
+WHERE suspect.suspect_id = locked_up.suspect_id AND locked_up.locked_in_cell = 1;
+*/
+
+/* Birthdates of all the suspects that are locked up in Cell no. 2 
+(Join the Suspects and Locked Up table to find the Birth date(s) of the suspect(s) in cell no. 2*/
+
+/*
+SELECT suspect.birth_date
+FROM suspect, locked_up
+WHERE suspect.suspect_id = locked_up.suspect_id AND locked_up.locked_in_cell = 2;
+*/
+
+/*Aggregation SQL Queries */
+
+/* Number of suspects that are locked up in the cells */
+/*
+SELECT COUNT(*) AS total_suspects
+    FROM public.locked_up;
+*/
+
+/* Number of crimes that are commited and logged into the database */
+/*
+SELECT COUNT(*) AS total_crimes
+    FROM public.crime;
+*/
+
+/* What is the longest duration that a suspect is locked up for? */
+
+/*
+SELECT MAX(DATE_PART('day', release_date::timestamp - start_date::timestamp)) AS MaxDaysLockedUp
+    FROM public.locked_up;
+*/
+
+
+/*Nested Aggregation with group-by */
+
+/* Show all suspects that have a locked up duration 
+which is greater than the lowest/minimum locked up duration of suspects */
+
+/*
+SELECT suspect.suspect_id, name, locked_in_cell, birth_date, 
+DATE_PART('day', release_date::timestamp - start_date::timestamp) AS DaysLockedUp
+FROM public.suspect, public.locked_up
+WHERE (suspect.suspect_id = locked_up.suspect_id) AND (suspect.suspect_id IN
+				(SELECT suspect_id
+				FROM public.locked_up
+				GROUP BY suspect_id
+				HAVING DATE_PART('day', release_date::timestamp - start_date::timestamp) 
+				> (SELECT MIN(DATE_PART('day', release_date::timestamp - start_date::timestamp))
+					FROM public.locked_up))); 
+*/
+
+
+/* Show all suspects that have a locked up duration 
+which is greater than the average locked up duration of suspects*/
+
+/*
+SELECT suspect.suspect_id, name, locked_in_cell, birth_date, 
+DATE_PART('day', release_date::timestamp - start_date::timestamp) AS DaysLockedUp
+FROM public.suspect, public.locked_up
+WHERE (suspect.suspect_id = locked_up.suspect_id) AND (suspect.suspect_id IN
+				(SELECT suspect_id
+				FROM public.locked_up
+				GROUP BY suspect_id
+				HAVING DATE_PART('day', release_date::timestamp - start_date::timestamp) 
+				 > (SELECT AVG(DATE_PART('day', release_date::timestamp - start_date::timestamp))
+					FROM public.locked_up)));
+*/
+
+

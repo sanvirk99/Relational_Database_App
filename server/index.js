@@ -195,7 +195,7 @@ app.get('/delete_officer/:id', (req, res) => {
     db.query(getUserQuery, (error, result) => {
 
       if (error) {
-        console.log(error);
+        res.send('error while deleting in database');
       }
   
       console.log(result);

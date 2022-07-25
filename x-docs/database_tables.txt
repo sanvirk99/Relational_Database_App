@@ -1,3 +1,10 @@
+-- SCHEMA: public
+
+-- DROP SCHEMA IF EXISTS public ;
+
+CREATE SCHEMA IF NOT EXISTS public
+    AUTHORIZATION postgres;
+    
 CREATE TABLE Equipment(
    equipment_id serial PRIMARY KEY,
    type VARCHAR ( 50 ) NOT NULL

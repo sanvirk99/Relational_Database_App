@@ -2,7 +2,7 @@ INSERT INTO Equipment(type)
 VALUES 
 	('ammunition'),
 	('protective'),
-	('electroninc'),
+	('electronic'),
 	('unclassified'),
 	('transportation');
 
@@ -44,7 +44,7 @@ VALUES
 	(nextval('goverment_sequence'),'Jagga Virk'),
 	(nextval('goverment_sequence'),'Gaggu GILL'),
 	(nextval('goverment_sequence'),'Sidhu Moosa'),
-    (nextval('goverment_sequence'),'Raj Kirk');
+    	(nextval('goverment_sequence'),'Raj Kirk');
 
 INSERT INTO complaint
 	(contact_info,description)
@@ -57,10 +57,10 @@ VALUES
 
 INSERT INTO Locked_up(suspect_id, locked_in_cell, start_date, release_date)
 VALUES  (1, 1, '2022-07-01', '2025-07-01'),
-		(2, 2 ,'2022-07-02', '2027-07-01'),
-		(3, 3, '2022-07-03', '2023-07-01'),
-		(4, 4, '2022-07-04', '2028-07-01'),
-		(5, 5, '2022-07-05', '2057-07-01');
+		(2, 2 ,'2022-07-01', '2027-07-05'),
+		(3, 3, '2022-07-02', '2023-07-04'),
+		(4, 4, '2022-07-10', '2028-07-28'),
+		(5, 5, '2022-06-05', '2057-07-05');
 
 INSERT INTO police_officer
   (badge, driver_l,duty_name,rank_name)

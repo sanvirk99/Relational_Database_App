@@ -179,7 +179,7 @@ CREATE TABLE office_review(
 	complaint_id SERIAL NOT NULL,
 	time TIMESTAMP,
 	FOREIGN KEY (badge) REFERENCES office_worker(badge),
-	FOREIGN KEY (complaint_id) REFERENCES complaint(complaint_id)
+	FOREIGN KEY (complaint_id) REFERENCES complaint(complaint_id) ON DELETE CASCADE
 );
 
 CREATE TABLE rookie(

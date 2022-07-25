@@ -114,7 +114,7 @@ CREATE TABLE oversees(
 	description VARCHAR(100),
 	PRIMARY KEY(goverment_id,crime_id,badge),
 	FOREIGN KEY(goverment_id)
-		REFERENCES goverment_officer(goverment_id),
+		REFERENCES goverment_officer(goverment_id) ON DELETE CASCADE,
 	FOREIGN KEY(crime_id,badge)
 		REFERENCES investigates(crime_id,officer)
 );

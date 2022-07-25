@@ -1,0 +1,374 @@
+-- SCHEMA: public
+
+-- DROP SCHEMA IF EXISTS public ;
+
+CREATE SCHEMA IF NOT EXISTS public
+    AUTHORIZATION postgres;
+    
+CREATE TABLE Equipment(
+   equipment_id serial PRIMARY KEY,
+   type VARCHAR ( 50 ) NOT NULL
+);
+
+CREATE TABLE Prison(
+   cell serial PRIMARY KEY,
+   max_capacity smallint NOT NULL,
+   current_capacity smallint Not NULL
+);
+
+CREATE TABLE Suspect(
+   suspect_id serial PRIMARY KEY,
+   name VARCHAR ( 50 ),
+   birth_date DATE,
+   height_cm smallint ,
+   eye_colour VARCHAR ( 50 ),
+   address VARCHAR ( 60 )
+);
+
+CREATE TABLE driver_licence(
+   driver_l VARCHAR(20) PRIMARY KEY,
+   name VARCHAR ( 50 ),
+   birth_date DATE,
+   height_cm smallint ,
+   eye_colour VARCHAR ( 50 ),
+   address VARCHAR ( 60 )
+);
+
+CREATE TABLE crime(
+	crime_id serial PRIMARY KEY,
+	description VARCHAR(100),
+	cordinates POINT 
+);
+
+CREATE TABLE goverment_officer(
+    goverment_id VARCHAR(15) PRIMARY KEY,
+    name VARCHAR(50)
+);
+
+CREATE TABLE complaint(
+	complaint_id SERIAL PRIMARY KEY,
+	contact_info VARCHAR(50),
+	description VARCHAR(100) NOT NULL
+);
+
+CREATE TABLE Locked_up(
+   suspect_id serial PRIMARY KEY,
+   locked_in_cell smallint NOT NULL,
+   start_date DATE NOT NULL,
+   release_date DATE,
+   FOREIGN KEY(locked_in_cell) 
+	  	REFERENCES Prison(cell),
+	FOREIGN KEY(suspect_id) 
+	  	REFERENCES suspect(suspect_id)  
+);
+
+CREATE TABLE police_officer(
+   badge VARCHAR(20) PRIMARY KEY,
+   driver_l VARCHAR(20) UNIQUE NOT NULL,
+   duty_name VARCHAR(50),
+   rank_name VARCHAR(20),
+   FOREIGN KEY(driver_l)
+		REFERENCES driver_licence(driver_l) 
+);
+
+CREATE TABLE equipment_checkout(
+	equipment_id serial PRIMARY KEY,
+	checkout_officer VARCHAR ( 20 ) NOT NULL,
+	time TIMESTAMP,
+	FOREIGN KEY(checkout_officer)
+		REFERENCES police_officer(badge),
+    FOREIGN KEY(equipment_id)
+        REFERENCES Equipment(equipment_id)
+);
+
+CREATE TABLE logs_suspect(
+	officer VARCHAR(20) NOT NULL,
+	suspect_id INT PRIMARY KEY,
+	time TIMESTAMP NOT NULL,
+	FOREIGN KEY(officer)
+		REFERENCES police_officer(badge),
+	FOREIGN KEY(suspect_id)
+		REFERENCES suspect(suspect_id)
+);
+
+CREATE TABLE investigates(
+	crime_id INT NOT NULL,
+	officer VARCHAR(20) NOT NULL, 
+	time TIMESTAMP,
+	PRIMARY KEY(crime_id,officer),
+	FOREIGN KEY(crime_id)
+		REFERENCES crime(crime_id),
+	FOREIGN KEY(officer)
+		REFERENCES police_officer(badge)
+);
+
+CREATE TABLE suspect_crime(
+	suspect_id INT NOT NULL,
+	crime_id INT NOT NULL, 
+	role_description VARCHAR(100),
+	PRIMARY KEY(suspect_id,crime_id),
+	FOREIGN KEY(suspect_id)
+		REFERENCES suspect(suspect_id),
+	FOREIGN KEY(crime_id)
+		REFERENCES crime(crime_id)
+);
+
+
+CREATE TABLE oversees(
+	goverment_id VARCHAR(15) NOT NULL,
+	crime_id INT NOT NULL, 
+	badge VARCHAR(20) NOT NULL,
+	description VARCHAR(100),
+	PRIMARY KEY(goverment_id,crime_id,badge),
+	FOREIGN KEY(goverment_id)
+		REFERENCES goverment_officer(goverment_id) ON DELETE CASCADE,
+	FOREIGN KEY(crime_id,badge)
+		REFERENCES investigates(crime_id,officer)
+);
+
+CREATE TABLE evidence (
+    evidence_id SERIAL PRIMARY KEY,
+    description VARCHAR(100),	
+    crime_id INT,
+    FOREIGN KEY(crime_id)
+    REFERENCES crime(crime_id)
+);
+
+CREATE TABLE officer_evidence (
+	badge VARCHAR(20) NOT NULL,
+	evidence_id INT UNIQUE NOT NULL,
+	timestamp TIMESTAMP,
+	FOREIGN KEY (badge)
+		REFERENCES police_officer(badge),
+	FOREIGN KEY (evidence_id)
+		REFERENCES evidence(evidence_id)
+);
+
+CREATE TABLE evidence_storage(
+	evidence_id INT UNIQUE NOT NULL,
+	aisle SMALLINT,
+	shelf SMALLINT,
+	position SMALLINT,
+	PRIMARY KEY(aisle,shelf,position),
+	FOREIGN KEY(evidence_ID)
+		REFERENCES evidence(evidence_id)	
+);
+
+CREATE TABLE isa_detective(
+	badge VARCHAR(20) UNIQUE NOT NULL,
+	speciality_description VARCHAR(200),
+	FOREIGN KEY(badge) REFERENCES police_officer(badge)
+);
+
+CREATE TABLE evidence_accesses(
+	evidence_id INT NOT NULL,
+	detective_badge VARCHAR(20) NOT NULL,
+	time TIMESTAMP,
+	FOREIGN KEY(evidence_id) REFERENCES evidence(evidence_id),
+	FOREIGN KEY(detective_badge) REFERENCES isa_detective(badge)
+);
+
+CREATE TABLE office_worker(
+	badge VARCHAR(20) UNIQUE NOT NULL,
+	desk_num SERIAL PRIMARY KEY,
+	FOREIGN KEY (badge) REFERENCES police_officer(badge)
+);
+
+CREATE TABLE office_review(
+	badge VARCHAR(20) NOT NULL,
+	complaint_id SERIAL NOT NULL,
+	time TIMESTAMP,
+	FOREIGN KEY (badge) REFERENCES office_worker(badge),
+	FOREIGN KEY (complaint_id) REFERENCES complaint(complaint_id) ON DELETE CASCADE
+);
+
+CREATE TABLE rookie(
+	training_officer VARCHAR(20) NOT NULL,
+	rookie_id SERIAL PRIMARY KEY,
+	duty_name VARCHAR(50) NOT NULL,
+	FOREIGN KEY (training_officer) REFERENCES police_officer(badge)
+);
+
+CREATE SEQUENCE goverment_sequence
+start 1234
+increment 1;
+
+CREATE SEQUENCE badge_sequence
+start 123456
+increment 1;
+
+INSERT INTO Equipment(type) 
+VALUES 
+	('ammunition'),
+	('protective'),
+	('electronic'),
+	('unclassified'),
+	('transportation');
+
+INSERT INTO Prison(max_capacity,current_capacity) 
+VALUES
+	('10','0'),
+	('11','2'),
+	('14','5'),
+	('1','0'),
+	('6','3');
+
+INSERT INTO Suspect (name,birth_date,height_cm,eye_colour,address)
+VALUES ('James Smith', '1996-12-02','180','brown','1215 Reserve St, Castleton, Ontario, K0K 1M0'),
+       ('Robert Johnson', '1997-08-24','170','black','3466 Islington Ave, Toronto, Ontario, M9V 2X5' ),
+       ('John White', '1994-05-11','185','brown','2845 3rd Avenue, Lloydminster, Alberta, T1J 3Y2' ),
+	   ('David Brown', '2000-08-24','190','grey', '519 avenue Royale, Quebec, Quebec, G1E 2L3'),
+	   ('Joseph Lee', '2000-08-24','200','black', '4706 Burdett Avenue, Victoria, British Columbia, V8R 5A7');
+
+INSERT INTO driver_licence (driver_l,name,birth_date,height_cm,eye_colour,address)
+VALUES  ('1111111','William Zheng', '1996-12-02','180','black','3881 Granville St, Halifax, Nova Scotia, B3K 5M1'),
+        ('2222222','Richard Wu', '1996-12-02','180','black','731 Findlay Creek Road, Grasmere, British Columbia, V0B 1R0'),
+        ('3333333','Thomas Kumar', '1996-12-02','180','gray','2707 Blanshard, Victoria, British Columbia, V8W 2H9'),
+        ('4444444','Charles Wang', '1996-12-02','180','brown','723 Merivale Road, Ottawa, Ontario, K2G 3K2'),
+        ('5555555','Daniel Liu', '1996-12-02','180','light brown','3202 Main St, Rosetown, Saskatchewan(SK), S0L 2V0');
+
+INSERT INTO crime
+	(description,cordinates)
+VALUES
+    ('grand theft','49.181004, -122.802752'),
+    ('hit and run','49.181004, -122.802757'),
+    ('robbery from building','49.181004, -122.802786'),
+    ('illegal fire','49.181004, -122.802782'),
+    ('violence on property','49.181004, -122.802756'); 
+	
+INSERT INTO goverment_officer
+	(goverment_id,name)
+VALUES
+	(nextval('goverment_sequence'),'Bobby Kirk'),
+	(nextval('goverment_sequence'),'Jagga Virk'),
+	(nextval('goverment_sequence'),'Gaggu GILL'),
+	(nextval('goverment_sequence'),'Sidhu Moosa'),
+    	(nextval('goverment_sequence'),'Raj Kirk');
+
+INSERT INTO complaint
+	(contact_info,description)
+VALUES
+  ('6045823342','loud neighbour'),
+  ('7782935267','gunshots heard'),
+  ('6042682935','illegal fireworks'),
+  ('7782350964','hit and run'),
+  ('7789230398','distripution of illegal materials');
+
+INSERT INTO Locked_up(suspect_id, locked_in_cell, start_date, release_date)
+VALUES  (1, 1, '2022-07-01', '2022-07-02'),
+		(2, 2 ,'2022-07-01', '2022-07-05'),
+		(3, 2, '2022-07-02', '2022-07-04'),
+		(4, 1, '2022-07-10', '2022-07-28'),
+		(5, 3, '2022-06-05', '2022-07-05');
+
+INSERT INTO police_officer
+  (badge, driver_l,duty_name,rank_name)
+VALUES
+  (nextval('badge_sequence'), '1111111','Ronald Tyson','Constable'),
+  (nextval('badge_sequence'), '2222222','Emyr Johnston','Captain'),
+  (nextval('badge_sequence'), '3333333','Arianne Walker','Lieutenant'),
+  (nextval('badge_sequence'), '4444444','Amy Rutledge','Officer'),
+  (nextval('badge_sequence'), '5555555','Dave Talley','Sergeant');
+  
+INSERT INTO equipment_checkout
+  (equipment_id, checkout_officer,time)
+VALUES
+    (1, '123456',NOW()),
+    (2, '123456',NOW()),
+    (3, '123457',NOW()),
+    (4, '123458',NOW()),
+    (5, '123459',NOW());
+
+INSERT INTO logs_suspect
+	(officer,suspect_id,time)
+VALUES
+  (123456, '1',NOW()),
+  (123456, '2',NOW()),
+  (123457, '3',NOW()),
+  (123459, '4',NOW()),
+  (123459, '5',NOW());
+
+INSERT INTO investigates
+	(crime_id,officer,time)
+VALUES
+  ('1','123456',NOW()),
+  ('2','123457',NOW()),
+  ('3','123458',NOW()),
+  ('4','123459',NOW()),
+  ('5','123460',NOW());
+
+INSERT INTO suspect_crime
+	(suspect_id,crime_id,role_description)
+VALUES
+  ('1','2','person who shot the gun'),
+  ('2','2','driver'),
+  ('3','3','main suspect'),
+  ('4','3','driver for the suspects'),
+  ('5','5','main suspect');
+
+INSERT INTO oversees
+	(goverment_id,crime_id,badge,description)
+VALUES
+    ('1234','1','123456','Dispatch Operator Overseeing'),
+    ('1235','2','123457','Dispatch Operator Overseeing'),
+    ('1236','3','123458','Dispatch Operator Overseeing'),
+    ('1237','4','123459','Dispatch Operator Overseeing'),
+    ('1238','5','123460','Dispatch Operator Overseeing');
+
+INSERT INTO evidence
+	(description,crime_id)
+VALUES
+  ('footage from surveillance camera','1'),
+  ('eyewitness account ','2'),
+  ('footage from surveillance camera','3'),
+  ('lighter','4'),
+  ('blood on baseball bat','5');
+
+INSERT INTO officer_evidence
+	(badge,evidence_id,timestamp)
+VALUES
+  ('123456','1',NOW()),
+  ('123457','2',NOW()),
+  ('123458','3',NOW()),
+  ('123459','4',NOW()),
+  ('123460','5',NOW());
+  
+INSERT INTO evidence_storage
+	(evidence_id,aisle,shelf,position)
+VALUES
+    ('1',1,1,1),
+    ('2',1,1,2),
+    ('3',1,2,1),
+    ('4',1,3,2),
+    ('5',5,1,1);
+
+INSERT INTO isa_detective
+	(badge,speciality_description)
+VALUES
+  ('123459','neighbourhood violence'),
+  ('123460','theft');
+
+INSERT INTO evidence_accesses
+	(evidence_id,detective_badge,time)
+VALUES
+  ('1','123459',NOW()),
+  ('2','123459',NOW());
+
+INSERT INTO office_worker
+	(badge)
+VALUES
+  ('123458');
+
+INSERT INTO office_review
+	(badge,complaint_id,time)
+VALUES
+  ('123458','1',NOW()),
+  ('123458','2',NOW()),
+  ('123458','3',NOW());
+
+INSERT INTO rookie
+	(training_officer,duty_name)
+VALUES
+  ('123456','Kade Rayner'),
+  ('123456','Danielle Willis'),
+  ('123457','Lamar Ball');

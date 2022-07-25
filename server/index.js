@@ -4,6 +4,7 @@ const bodyParser = require("body-parser");
 const db = require('./db');
 const app = express();
 const ejs = require('ejs');
+const { query } = require('express');
 
 app.set('view engine', 'ejs');
 
@@ -20,7 +21,7 @@ app.get(("/"), (req, res) => {
 
 function getdb() {
 
-  var getUserQuery = `SELECT * from police_officer`;
+  let getUserQuery = `SELECT * from police_officer`;
   //var getUserQuery=`SELECT table_name FROM information_schema.tables WHERE table_schema='public`;
 
   db.query(getUserQuery, (error, result) => {
@@ -39,7 +40,7 @@ function getdb() {
 app.get(('/police_officer'), (req, res) => {
 
 
-  var getUserQuery = `SELECT * from police_officer`;
+  let getUserQuery = `SELECT * from police_officer`;
   //var getUserQuery=`SELECT table_name FROM information_schema.tables WHERE table_schema='public`;
 
 
@@ -53,6 +54,8 @@ app.get(('/police_officer'), (req, res) => {
 
   })
 });
+
+
 
 app.get(('/add_officer'), (req, res) => {
 
@@ -74,7 +77,7 @@ app.post(('/insert_officer'), (req, res) => {
 
   //check driver l is unique
 
-    var insertQuery_dl = `INSERT INTO public.driver_licence(
+    let insertQuery_dl = `INSERT INTO public.driver_licence(
       driver_l, name, birth_date, height_cm, eye_colour, address)
       VALUES ('${req.body.licence}', 
         '${req.body.name}', 
@@ -83,7 +86,7 @@ app.post(('/insert_officer'), (req, res) => {
         '${req.body.eye_colour}', 
         '${req.body.address}');`;
 
-    var insertQuery_police = `INSERT INTO public.police_officer
+    let insertQuery_police = `INSERT INTO public.police_officer
     (badge, driver_l,duty_name,rank_name)
     VALUES
     (nextval('badge_sequence'), '${req.body.licence}','${req.body.duty_name}','${req.body.duty_rank}');`;
@@ -127,7 +130,7 @@ app.post(('/insert_officer'), (req, res) => {
 
 function getdriver() {
 
-  var getUserQuery = `SELECT * from driver_licence`;
+  let getUserQuery = `SELECT * from driver_licence`;
   //var getUserQuery=`SELECT table_name FROM information_schema.tables WHERE table_schema='public`;
 
   db.query(getUserQuery, (error, result) => {
@@ -145,7 +148,7 @@ function getdriver() {
 app.get(('/driver_l'), (req, res) => {
 
 
-  var getUserQuery = `SELECT * from driver_licence`;
+  let getUserQuery = `SELECT * from driver_licence`;
   //var getUserQuery=`SELECT table_name FROM information_schema.tables WHERE table_schema='public`;
 
 
@@ -159,6 +162,70 @@ app.get(('/driver_l'), (req, res) => {
 
   })
 });
+
+app.get(('/gov_officer'), (req, res) => {
+
+
+  let getUserQuery = `SELECT * from goverment_officer`;
+  //var getUserQuery=`SELECT table_name FROM information_schema.tables WHERE table_schema='public`;
+
+
+  db.query(getUserQuery, (error, result) => {
+
+    if (error) {
+      res.send(error);
+    }
+
+    //console.log(result.rows)
+
+    res.render('delete/gov_officer', { fields: result.fields, rows: result.rows, table_name: 'Goverment officer' });
+
+  })
+});
+
+
+app.get('/delete_officer/:id', (req, res) => {
+
+   //if two prams are required add /: for second and make source include this ;
+
+    console.log(req.params.id)
+    let getUserQuery = `DELETE FROM goverment_officer where goverment_id='${req.params.id}';`
+
+    console.log(getUserQuery);
+    db.query(getUserQuery, (error, result) => {
+
+      if (error) {
+        console.log(error);
+      }
+  
+      console.log(result);
+      
+      res.redirect('/gov_officer');
+      
+  
+    })
+
+
+})
+
+app.get(('/gov_oversee'), (req, res) => {
+
+
+  let getUserQuery = `SELECT * from oversees`;
+  //var getUserQuery=`SELECT table_name FROM information_schema.tables WHERE table_schema='public`;
+
+
+  db.query(getUserQuery, (error, result) => {
+
+    if (error) {
+      res.send(error);
+    }
+
+    res.render('database', { fields: result.fields, rows: result.rows, table_name: 'Goverment officer' });
+
+  })
+});
+
 
 
 

@@ -1,4 +1,62 @@
+/* Delete CASCADE Operation Query */
 
+/* Delete government officer, cascades to delete row in oversees */
+
+/*
+DELETE FROM public.goverment_officer
+	WHERE goverment_id = '1237';
+*/
+
+/* Delete Complaint from complaint table, cascades to delete complaint from office_review table */
+
+/*
+DELETE FROM public.complaint
+	WHERE complaint_id = '3';
+*/
+
+/* Update operation Query */
+
+/* Change the Eye color of the suspect to green*/
+
+/*
+UPDATE public.suspect
+	SET eye_colour= 'blue'
+	WHERE suspect_id = '4';
+*/
+
+/* Selection Query */
+
+/* Select police officers with badge number greater than 123458 */
+
+/*
+SELECT badge, duty_name AS officer_name
+FROM public.police_officer
+WHERE badge > '123458';
+*/
+
+/* Select prison cells with max capacity less than 10*/
+
+/*
+SELECT *
+FROM public.prison
+WHERE max_capacity < '10';
+*/
+
+/* Projection Query */
+
+/* All the types of equipment in the database */
+
+/*
+SELECT equipment.type
+FROM public.equipment;
+*/
+
+/* Names of all the police officers */
+
+/*
+SELECT duty_name AS officer_name
+FROM public.police_officer;
+*/
 
 /* Join Query */
 

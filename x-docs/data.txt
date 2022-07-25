@@ -85,9 +85,9 @@ INSERT INTO logs_suspect
 VALUES
   (123456, '1',NOW()),
   (123456, '2',NOW()),
-  (123467, '3',NOW()),
-  (123469, '4',NOW()),
-  (123469, '5',NOW());
+  (123457, '3',NOW()),
+  (123459, '4',NOW()),
+  (123459, '5',NOW());
 
 INSERT INTO investigates
 	(crime_id,officer,time)

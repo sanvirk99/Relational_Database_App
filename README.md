@@ -14,3 +14,5 @@ PG_DATABASE =
 
 After in server directory run node index.js or nodemon index.js
 
+locohost port number in browser to intract with db
+

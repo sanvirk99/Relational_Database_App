@@ -1,6 +1,7 @@
 ﻿# Relational_Database_App
 
 Run the single script "singlescript.txt" to create database on your machine this is found in x-docs
+Database used = PostgreSQL
 
 create .env file server directory
 

@@ -4,7 +4,8 @@ const bodyParser = require("body-parser");
 const db = require('./db');
 const app = express();
 const ejs = require('ejs');
-const { query } = require('express');
+
+
 
 app.set('view engine', 'ejs');
 
@@ -12,6 +13,8 @@ app.use(express.static(__dirname + '/views'));
 app.use(bodyParser.urlencoded({
   extended: true
 }));
+
+
 
 app.get(("/"), (req, res) => {
 
@@ -207,6 +210,143 @@ app.get('/delete_officer/:id', (req, res) => {
 
 
 })
+
+app.get(('/complaints'), (req, res) => {
+
+
+  let getUserQuery = `SELECT * from complaint`;
+  //var getUserQuery=`SELECT table_name FROM information_schema.tables WHERE table_schema='public`;
+
+
+  db.query(getUserQuery, (error, result) => {
+
+    if (error) {
+      res.send(error);
+    }
+
+    //console.log(result.rows)
+
+    res.render('delete/complaints', { fields: result.fields, rows: result.rows, table_name: 'List of complaints (deleting officer also deletes asocciation in officer review table)' });
+
+  })
+});
+
+app.get(('/suspects'), (req, res) => {
+
+
+  let getUserQuery = `SELECT * from suspect`;
+  //var getUserQuery=`SELECT table_name FROM information_schema.tables WHERE table_schema='public`;
+
+
+  db.query(getUserQuery, (error, result) => {
+
+    if (error) {
+      res.send(error);
+    }
+
+    //console.log(result.rows)
+
+    res.render('update/suspect', { fields: result.fields, rows: result.rows, table_name: 'List of all suspects' });
+
+  })
+});
+
+
+app.get(('/update_suspect/:update_id'), (req, res) => {
+
+
+  //let getUserQuery = `SELECT from suspect where suspect_id='${req.params.update_id}';`;
+  let getUserQuery= `SELECT * FROM suspect where suspect_id=${req.params.update_id};`;
+ 
+  console.log(getUserQuery);
+
+  db.query(getUserQuery, (error, result) => {
+
+    if (error) {
+      res.send(error);
+    }
+
+    console.log(result.rows)
+
+    res.render('update/form', { fields: result.fields, rows: result.rows, table_name: 'List of all suspects' });
+
+  })
+});
+
+
+app.post(('/new_info/:id'), (req, res) => {
+
+  console.log(req.body)
+
+  //let getUserQuery = `SELECT from suspect where suspect_id='${req.params.update_id}';`;
+  let getUserQuery= `UPDATE public.suspect
+	SET  name='${req.body.name}', birth_date='${req.body.birth_date}', height_cm='${req.body.height}', eye_colour='${req.body.eye_colour}', address='${req.body.address}'
+	WHERE suspect_id=${req.params.id};`;
+ 
+   //console.log(getUserQuery);
+
+  db.query(getUserQuery, (error, result) => {
+
+    if (error) {
+      res.send(error);
+    }
+
+    res.redirect('/suspects')
+
+  })
+});
+
+
+
+
+// app.get('/update_suspect/<%=update_id%>', (req, res) => {
+
+//   //if two prams are required add /: for second and make source include this ;
+
+//    //console.log(req.params.id)
+//    let getUserQuery = `UPDATE FROM suspect 
+   
+//    name= '${req.body.name}', birth_date='${req.body.birth_date}', height_cm='${req.body.height}', eye_colour='${req.body.eye_colour}', address= '${req.body.address}'
+   
+//    where complaint_id='${req.params.update_id}';`;
+
+//    //console.log(req.params.id)
+
+//    console.log(getUserQuery);
+//    db.query(getUserQuery, (error, result) => {
+
+//      if (error) {
+//        res.send('error while deleting in database');
+//      }
+ 
+//      //console.log(result);
+     
+//      res.redirect('/suspects');
+     
+ 
+//    })
+
+
+// })
+app.get(('/reviews'), (req, res) => {
+
+
+  let getUserQuery = `SELECT * from office_review`;
+  //var getUserQuery=`SELECT table_name FROM information_schema.tables WHERE table_schema='public`;
+
+
+  db.query(getUserQuery, (error, result) => {
+
+    if (error) {
+      res.send(error);
+    }
+
+    //console.log(result.rows)
+
+    res.render('database', { fields: result.fields, rows: result.rows, table_name: 'Reviewed complaints by office worker police specified with id along with time' });
+
+  })
+});
 
 app.get(('/gov_oversee'), (req, res) => {
 

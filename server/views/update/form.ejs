@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    
+    <tr><a href="/suspects">Abort update</a></tr>
+   
+    <form action="/new_info/<%=rows[0].suspect_id%>" method="post">
+        <fieldset>
+            <h3>change any information you want to update </h3>
+        <label for="fname">name :</label>
+        <input type="text" name="name" value="<%=rows[0].name%>"  maxlength="7"><br>
+
+        
+
+        <label for="fdate">Birth Date :</label>
+        <input type="date" name="birth_date"
+        value="<%=rows[0].birth_date.getFullYear()%>-<%=String(rows[0].birth_date.getMonth()).padStart(2, '0')%>-<%=String(rows[0].birth_date.getDate()).padStart(2,'0')%>"
+        min="1950-01-01" max="2022-12-31"><br>
+
+        <label for="fheight">Height in CM :</label>
+
+        <input type="number" value="<%=rows[0].height_cm%>" name="height"
+        min="120" max="250"><br>
+
+        <label for="feye_colour">Eye colour on Driver Licence :</label>
+        <input type="text" name="eye_colour" value="<%=rows[0].eye_colour%>" maxlength="7"><br>
+
+
+        <label for="faddress"> Address on Driver Licence:</label>
+        <input type="text"  maxlength="56" name="address" value="<%=rows[0].address%>"><br>
+
+        <input type="submit">
+
+
+
+
+        </fieldset>
+        
+    </form>

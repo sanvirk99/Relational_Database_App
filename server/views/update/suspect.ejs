@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+
+    <div class="police_officer">
+        <h2><%=table_name%></h2>
+
+       
+
+        <div class="table_scroll">
+            <table id="table">
+
+                <tr>
+
+                <% fields.forEach(element => { %>
+
+                    <th><%= element.name%></th>
+
+                <% }); %>
+
+                <th>..........</th>
+                   
+                </tr>
+           
+
+                <% rows.forEach(element1 => { let update_id=0 %>
+
+                    <tr>
+                   
+                        <% for (let [key, value] of Object.entries(element1)) { if(key=='suspect_id'){
+
+                            update_id=value;
+                           
+                        } %>
+
+                            
+                            <td><%=`${value}`%></td>
+    
+                        <%}%>
+
+                       
+                        <td><a href="/update_suspect/<%=update_id%>">Update</a></td>
+                            
+                    </tr>
+                    
+                <% }); %>
+
+                <tr><a href="/">GO TO HOME PAGE</a></tr>
+
+
+            </table>
+
+            
+        </div>
+    
+</body>
+</html>

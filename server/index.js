@@ -178,7 +178,7 @@ app.get(('/gov_officer'), (req, res) => {
 
     //console.log(result.rows)
 
-    res.render('delete/gov_officer', { fields: result.fields, rows: result.rows, table_name: 'Goverment officer' });
+    res.render('delete/gov_officer', { fields: result.fields, rows: result.rows, table_name: 'Goverment officer (deleting officer also deletes asocciation in oversee table)' });
 
   })
 });
@@ -198,7 +198,7 @@ app.get('/delete_officer/:id', (req, res) => {
         res.send('error while deleting in database');
       }
   
-      console.log(result);
+      //console.log(result);
       
       res.redirect('/gov_officer');
       
@@ -227,6 +227,240 @@ app.get(('/gov_oversee'), (req, res) => {
 });
 
 
+
+app.get(('/select_officer'), (req, res) => {
+
+
+  let getUserQuery = `SELECT badge, duty_name AS officer_name
+  FROM public.police_officer
+  WHERE badge > '123458';`;
+  //var getUserQuery=`SELECT table_name FROM information_schema.tables WHERE table_schema='public`;
+
+
+  db.query(getUserQuery, (error, result) => {
+
+    if (error) {
+      res.send(error);
+    }
+
+    res.render('database', { fields: result.fields, rows: result.rows, table_name: 'Select police officers with badge number greater than 123458'});
+
+  })
+});
+
+
+app.get(('/select_prison'), (req, res) => {
+
+
+  let getUserQuery = `SELECT * FROM prison
+  WHERE max_capacity < '10';`;
+
+
+  db.query(getUserQuery, (error, result) => {
+
+    if (error) {
+      res.send(error);
+    }
+
+    console.log(result)
+
+    res.render('database', { fields: result.fields, rows: result.rows, table_name: 'Select prison cells with max capacity less than 10'});
+
+  })
+});
+
+app.get(('/projection_equipment'), (req, res) => {
+
+
+  let getUserQuery = `SELECT equipment.type
+  FROM public.equipment;`;
+
+
+  db.query(getUserQuery, (error, result) => {
+
+    if (error) {
+      res.send(error);
+    }
+
+    //console.log(result)
+
+    res.render('database', { fields: result.fields, rows: result.rows, table_name: 'All the types of equipment in the database'});
+
+  })
+});
+
+app.get(('/projection_officer'), (req, res) => {
+
+
+  let getUserQuery = `SELECT duty_name AS officer_name
+  FROM public.police_officer;`;
+
+
+  db.query(getUserQuery, (error, result) => {
+
+    if (error) {
+      res.send(error);
+    }
+
+    //console.log(result)
+
+    res.render('database', { fields: result.fields, rows: result.rows, table_name: 'Names of all the police officers '});
+
+  })
+});
+
+app.get(('/join_query_1'), (req, res) => {
+
+
+  let getUserQuery = `SELECT suspect.name
+  FROM suspect, locked_up
+  WHERE suspect.suspect_id = locked_up.suspect_id AND locked_up.locked_in_cell = 1;`;
+
+
+  db.query(getUserQuery, (error, result) => {
+
+    if (error) {
+      res.send(error);
+    }
+
+    //console.log(result)
+
+    res.render('database', { fields: result.fields, rows: result.rows, table_name: 'Join the Suspects and Locked Up table to find the name(s) of the suspect(s) in cell no. 1'});
+
+  })
+});
+
+
+
+app.get(('/join_query_2'), (req, res) => {
+
+
+  let getUserQuery = `SELECT suspect.birth_date
+  FROM suspect, locked_up
+  WHERE suspect.suspect_id = locked_up.suspect_id AND locked_up.locked_in_cell = 2;`;
+
+
+  db.query(getUserQuery, (error, result) => {
+
+    if (error) {
+      res.send(error);
+    }
+
+    //console.log(result)
+
+    res.render('database', { fields: result.fields, rows: result.rows, table_name: 'Join the Suspects and Locked Up table to find the Birth date(s) of the suspect(s) in cell no. 2'});
+
+  })
+});
+
+
+
+app.get(('/aggregation_1'), (req, res) => {
+
+
+  let getUserQuery = `SELECT COUNT(*) AS total_suspects
+  FROM public.locked_up;`;
+
+
+  db.query(getUserQuery, (error, result) => {
+
+    if (error) {
+      res.send(error);
+    }
+
+    res.render('database', { fields: result.fields, rows: result.rows, table_name: 'Number of suspects that are locked up in the cells'});
+
+  })
+});
+
+
+app.get(('/aggregation_2'), (req, res) => {
+
+
+  let getUserQuery = `SELECT COUNT(*) AS total_crimes
+  FROM public.crime;`;
+
+
+  db.query(getUserQuery, (error, result) => {
+
+    if (error) {
+      res.send(error);
+    }
+
+    res.render('database', { fields: result.fields, rows: result.rows, table_name: 'Number of crimes that are commited and logged into the database'});
+
+  })
+});
+
+app.get(('/aggregation_3'), (req, res) => {
+
+
+  let getUserQuery = `SELECT MAX(DATE_PART('day', release_date::timestamp - start_date::timestamp)) AS Max_Days_Locked_Up
+  FROM public.locked_up;`;
+
+
+  db.query(getUserQuery, (error, result) => {
+
+    if (error) {
+      res.send(error);
+    }
+
+    res.render('database', { fields: result.fields, rows: result.rows, table_name: 'What is the longest duration that a suspect is locked up for?'});
+
+  })
+});
+
+app.get(('/nested_aggregation_1'), (req, res) => {
+
+
+  let getUserQuery = `SELECT suspect.suspect_id, name, locked_in_cell, birth_date, 
+  DATE_PART('day', release_date::timestamp - start_date::timestamp) AS DaysLockedUp
+  FROM public.suspect, public.locked_up
+  WHERE (suspect.suspect_id = locked_up.suspect_id) AND (suspect.suspect_id IN
+          (SELECT suspect_id
+          FROM public.locked_up
+          GROUP BY suspect_id
+          HAVING DATE_PART('day', release_date::timestamp - start_date::timestamp) 
+          > (SELECT MIN(DATE_PART('day', release_date::timestamp - start_date::timestamp))
+            FROM public.locked_up)));`;
+
+
+  db.query(getUserQuery, (error, result) => {
+
+    if (error) {
+      res.send(error);
+    }
+
+    res.render('database', { fields: result.fields, rows: result.rows, table_name: 'Show all suspects that have a locked up duration which is greater than the lowest/minimum locked up duration of suspects'});
+
+  })
+});
+
+app.get(('/nested_aggregation_2'), (req, res) => {
+
+
+  let getUserQuery = `SELECT suspect.suspect_id, name, locked_in_cell, birth_date, 
+  DATE_PART('day', release_date::timestamp - start_date::timestamp) AS DaysLockedUp
+  FROM public.suspect, public.locked_up
+  WHERE (suspect.suspect_id = locked_up.suspect_id) AND (suspect.suspect_id IN
+          (SELECT suspect_id
+          FROM public.locked_up
+          GROUP BY suspect_id
+          HAVING DATE_PART('day', release_date::timestamp - start_date::timestamp) 
+           > (SELECT AVG(DATE_PART('day', release_date::timestamp - start_date::timestamp))
+            FROM public.locked_up)));`;
+
+
+  db.query(getUserQuery, (error, result) => {
+
+    if (error) {
+      res.send(error);
+    }
+
+    res.render('database', { fields: result.fields, rows: result.rows, table_name: 'Show all suspects that have a locked up duration which is greater than the average locked up duration of suspects'});
+
+  })
+});
 
 
 

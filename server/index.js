@@ -231,6 +231,31 @@ app.get(('/complaints'), (req, res) => {
   })
 });
 
+app.get('/delete_complaint/:id', (req, res) => {
+
+  //if two prams are required add /: for second and make source include this ;
+
+   console.log(req.params.id)
+   let getUserQuery = `DELETE FROM public.complaint
+   WHERE complaint_id = '${req.params.id}';`
+
+   console.log(getUserQuery);
+   db.query(getUserQuery, (error, result) => {
+
+     if (error) {
+       res.send('error while deleting in database');
+     }
+ 
+     //console.log(result);
+     
+     res.redirect('/complaints');
+     
+ 
+   })
+
+
+})
+
 app.get(('/suspects'), (req, res) => {
 
 
@@ -258,7 +283,7 @@ app.get(('/update_suspect/:update_id'), (req, res) => {
   //let getUserQuery = `SELECT from suspect where suspect_id='${req.params.update_id}';`;
   let getUserQuery= `SELECT * FROM suspect where suspect_id=${req.params.update_id};`;
  
-  console.log(getUserQuery);
+  //console.log(getUserQuery);
 
   db.query(getUserQuery, (error, result) => {
 
@@ -266,7 +291,7 @@ app.get(('/update_suspect/:update_id'), (req, res) => {
       res.send(error);
     }
 
-    console.log(result.rows)
+    //console.log(result.rows)
 
     res.render('update/form', { fields: result.fields, rows: result.rows, table_name: 'List of all suspects' });
 
@@ -276,7 +301,7 @@ app.get(('/update_suspect/:update_id'), (req, res) => {
 
 app.post(('/new_info/:id'), (req, res) => {
 
-  console.log(req.body)
+  //console.log(req.body)
 
   //let getUserQuery = `SELECT from suspect where suspect_id='${req.params.update_id}';`;
   let getUserQuery= `UPDATE public.suspect

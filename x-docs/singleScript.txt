@@ -72,7 +72,7 @@ CREATE TABLE police_officer(
 );
 
 CREATE TABLE equipment_checkout(
-	equipment_id serial PRIMARY KEY,
+	equipment_id serial,
 	checkout_officer VARCHAR ( 20 ) NOT NULL,
 	time TIMESTAMP,
 	FOREIGN KEY(checkout_officer)
@@ -277,7 +277,14 @@ VALUES
     (2, '123456',NOW()),
     (3, '123457',NOW()),
     (4, '123458',NOW()),
-    (5, '123459',NOW());
+    (5, '123459',NOW()),
+    (3, '123456',NOW()),
+    (4, '123456',NOW()),
+    (5, '123456',NOW()),
+    (4, '123459',NOW()),
+    (3, '123459',NOW()),
+    (2, '123459',NOW()),
+    (1, '123459',NOW());
 
 INSERT INTO logs_suspect
 	(officer,suspect_id,time)

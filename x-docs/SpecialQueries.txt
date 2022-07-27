@@ -136,3 +136,21 @@ WHERE (suspect.suspect_id = locked_up.suspect_id) AND (suspect.suspect_id IN
 */
 
 
+--DIVISION Query
+--Find the Checkout Officer(s) badge no. and name who have checked out all the different equipments
+/*
+SELECT DISTINCT checkout_officer as badge_no, duty_name as officer_name
+FROM public.equipment_checkout, public.police_officer
+WHERE equipment_checkout.checkout_officer = police_officer.badge AND checkout_officer NOT IN (SELECT checkout_officer
+							   FROM ((SELECT checkout_officer, equipment_id
+									 FROM (SELECT equipment.equipment_id
+										  FROM public.equipment) as equip
+									 cross join (SELECT DISTINCT checkout_officer
+												 FROM public.equipment_checkout) as officer)
+									EXCEPT 
+									(SELECT checkout_officer, equipment_id
+									 FROM public.equipment_checkout)) as checkedout);
+*/
+								
+
+								

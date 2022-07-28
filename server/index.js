@@ -628,6 +628,35 @@ app.get(('/nested_aggregation_2'), (req, res) => {
 });
 
 
+app.get(('/division'), (req, res) => {
+
+
+  let getUserQuery = `SELECT DISTINCT checkout_officer as badge_no, duty_name as officer_name
+  FROM public.equipment_checkout, public.police_officer
+  WHERE equipment_checkout.checkout_officer = police_officer.badge AND checkout_officer NOT IN (SELECT checkout_officer
+                   FROM ((SELECT checkout_officer, equipment_id
+                     FROM (SELECT equipment.equipment_id
+                        FROM public.equipment) as equip
+                     cross join (SELECT DISTINCT checkout_officer
+                           FROM public.equipment_checkout) as officer)
+                    EXCEPT 
+                    (SELECT checkout_officer, equipment_id
+                     FROM public.equipment_checkout)) as checkedout);`;
+
+
+  db.query(getUserQuery, (error, result) => {
+
+    if (error) {
+      res.send(error);
+    }
+
+    res.render('database', { fields: result.fields, rows: result.rows, table_name: 'Find the Checkout Officer(s) badge no. and name who have checked out all the different equipments'});
+
+  })
+});
+
+
+
 
 app.listen(8080, () => {
 

@@ -197,6 +197,58 @@ CREATE SEQUENCE badge_sequence
 start 123456
 increment 1;
 
+--Function that checks if driver license length is within range and height less than 999
+CREATE FUNCTION check_driverlicense_values()
+	RETURNS TRIGGER
+AS $$
+BEGIN
+	IF length(NEW.driver_l) < 7 THEN
+		RAISE EXCEPTION 'The Driver license number cannot be less than 7 numbers';
+	END IF;
+	IF length(CAST ((NEW.height_cm) AS TEXT)) > 3 THEN
+		RAISE EXCEPTION 'The Height cannot be more than 999cm, person too tall';
+	END IF;
+	RETURN NEW;
+END;
+$$
+LANGUAGE plpgsql;
+
+--Creates trigger that executes function when inserting or updating
+CREATE TRIGGER driverlicense_check
+	BEFORE INSERT OR UPDATE
+ON public.driver_licence
+FOR EACH ROW
+	EXECUTE PROCEDURE check_driverlicense_values();
+
+--Function that updates the prison tables current_capacity attribute
+CREATE FUNCTION update_prison_capacity()
+	RETURNS TRIGGER
+AS $$
+BEGIN
+	CASE TG_OP
+	WHEN 'INSERT' THEN
+		UPDATE public.prison AS prison
+		SET current_capacity = current_capacity + 1
+		WHERE prison.cell = NEW.locked_in_cell;
+	WHEN 'DELETE' THEN
+	UPDATE public.prison AS prison
+	SET current_capacity = current_capacity - 1
+	WHERE prison.cell = OLD.locked_in_cell
+	AND    prison.current_capacity > 0;
+	ELSE
+      RAISE EXCEPTION 'Unexpected prison_count: "%". Error occurred, check function update_prison_capacity() ', TG_OP;
+    END CASE;
+	RETURN NULL;
+END;
+$$
+LANGUAGE plpgsql;
+
+--Creates trigger that executes function when inserting or deleting locked_up table
+CREATE TRIGGER prison_capacity
+	AFTER INSERT OR DELETE ON public.locked_up
+FOR EACH ROW
+	EXECUTE PROCEDURE update_prison_capacity();
+
 INSERT INTO Equipment(type) 
 VALUES 
 	('ammunition'),
@@ -208,10 +260,10 @@ VALUES
 INSERT INTO Prison(max_capacity,current_capacity) 
 VALUES
 	('10','0'),
-	('11','2'),
-	('14','5'),
-	('1','0'),
-	('6','3');
+	('11','0'),
+	('14','0'),
+	('3','0'),
+	('6','0');
 
 INSERT INTO Suspect (name,birth_date,height_cm,eye_colour,address)
 VALUES ('James Smith', '1996-12-02','180','brown','1215 Reserve St, Castleton, Ontario, K0K 1M0'),

@@ -3,7 +3,7 @@
 Run the single script "singlescript.txt" to create database on your machine this is found in x-docs
 Database used = PostgreSQL
 
-Requirments: npm, nodejs
+Requirments: npm, nodejs,
 npm install dotenv
 create .env file server directory
 

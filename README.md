@@ -23,4 +23,5 @@ Main database (in PostgreSQL) files of interest are:
  1) singleScript.txt (to create and insert all tables, and create triggers and functions)
  2) SpecialQueries.txt (contains all the queries that are used to meet the Milestone 4/5 requirements (UPDATE, DELETE, JOIN, AGGREGATION, etc)
 
-final commit 84b379a490abf2d11129ea47065a361188eaba99
+
+final commit 631f29341998f42147009667ea2e3eef2eaed28b

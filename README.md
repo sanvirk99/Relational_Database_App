@@ -1,6 +1,6 @@
-﻿# Relational_Database_App
+# Relational_Database_App
 
-Run the single script "singlescript.txt" to create database on your machine this is found in x-docs
+Run the single script "singleScript.txt" to create database on your machine this is found in x-docs
 Database used = PostgreSQL
 
 Requirments: npm, nodejs,
@@ -17,11 +17,12 @@ PG_DATABASE =
 
 After in server directory run node index.js or nodemon index.js
 
-locohost port number in browser to intract with db
+local host port number in browser to intract with db
 
 Main database (in PostgreSQL) files of interest are:
  1) singleScript.txt (to create and insert all tables, and create triggers and functions)
- 2) SpecialQueries.txt (contains all the queries that are used to meet the Milestone 4/5 requirements (UPDATE, DELETE, JOIN, AGGREGATION, etc)
+ 2) SpecialQueries.txt (contains all the queries that are used to meet the Milestone 4/5 requirements (UPDATE, DELETE, JOIN, AGGREGATION,DIVISION, etc)
 
+PDF File contains the answers to the 2 questions, All the required SQL Queries with the data in the tables before and after the query is run on the GUI, Trigger functions and its testing queries.
 
-final commit 631f29341998f42147009667ea2e3eef2eaed28b
+final commit 8c7c498b82f0c07d9e9504bdaefce3419d932f71

@@ -39,13 +39,45 @@ function getdb() {
 
 app.post(('/table'), (req, res) => {
     let table_name = req.body.table;
+
+  
     let getUserQuery = `SELECT * from ${table_name}`;
     db.query(getUserQuery, (error, result) => {
 
         if (error) {
           res.send(error);
         }
-        res.render('database', { fields: result.fields, rows: result.rows, table_name: `${table_name}`});
+
+        if(table_name=='crime'){
+
+          let rows=result.rows;
+
+          // rows.forEach(element=>{
+
+          //   for (let [key, value] of Object.entries(element)){
+
+          //     if(key=='cordinates'){
+
+          //       for (let [key1, value1] of Object.entries(value)){
+
+          //         console.log(value1);
+          //       }
+                
+          //     }else{
+          //       //console.log(`${value}`)
+          //     }
+
+          //   }
+
+
+          // })
+
+          res.render('cordinates', { fields: result.fields, rows: result.rows, table_name: `${table_name}`});
+
+        }else{
+          res.render('database', { fields: result.fields, rows: result.rows, table_name: `${table_name}`});
+        }
+        
     
       })
 })

@@ -37,6 +37,18 @@ function getdb() {
   })
 }
 
+app.post(('/table'), (req, res) => {
+    let table_name = req.body.table;
+    let getUserQuery = `SELECT * from ${table_name}`;
+    db.query(getUserQuery, (error, result) => {
+
+        if (error) {
+          res.send(error);
+        }
+        res.render('database', { fields: result.fields, rows: result.rows, table_name: `${table_name}`});
+    
+      })
+})
 
 //getdb();
 
@@ -655,7 +667,25 @@ app.get(('/division'), (req, res) => {
   })
 });
 
+app.get(('/division2'), (req, res) => {
 
+
+    let getUserQuery = `select police.badge, police.duty_name from police_officer police where not exists
+        (select * from crime where not exists
+        (select investigates.crime_id from investigates where
+        investigates.crime_id = crime.crime_id and investigates.officer = police.badge))`;
+  
+  
+    db.query(getUserQuery, (error, result) => {
+  
+      if (error) {
+        res.send(error);
+      }
+  
+      res.render('database', { fields: result.fields, rows: result.rows, table_name: 'Find the Officer(s) badge no. and name who have investigated all crime'});
+  
+    })
+  });
 
 
 app.listen(8080, () => {

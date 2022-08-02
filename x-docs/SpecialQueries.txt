@@ -151,6 +151,26 @@ WHERE equipment_checkout.checkout_officer = police_officer.badge AND checkout_of
 									(SELECT checkout_officer, equipment_id
 									 FROM public.equipment_checkout)) as checkedout);
 */
-								
+--Finding the police officers who have investigated all crime
+/*
+select police.badge, police.duty_name from police_officer police where not exists
+        (select * from crime where not exists
+        (select investigates.crime_id from investigates where
+        investigates.crime_id = crime.crime_id and investigates.officer = police.badge));
+*/
 
-								
+--Triggers Queries
+
+--Query that showcases the height error trigger. Height should be <999 cm
+/*
+INSERT INTO public.driver_licence(
+	driver_l, name, birth_date, height_cm, eye_colour, address)
+	VALUES  ('9999999','Kavi Bakshi', '2000-06-08','1601','brown','456, Ash ST, British Columbia(BC), V5X 2C1');
+*/
+
+--Query that showcases the Driver license number error, driver license number should be >= length 7
+/*
+INSERT INTO public.driver_licence(
+	driver_l, name, birth_date, height_cm, eye_colour, address)
+	VALUES  ('67','Kavi Bakshi', '2000-06-08','160','brown','456, Ash ST, British Columbia(BC), V5X 2C1');
+*/

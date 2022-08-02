@@ -1,10 +1,46 @@
+/* INSERT Operation Query */
+
+--Inserting into driver license table
+
+/*
+INSERT INTO public.driver_licence(
+      driver_l, name, birth_date, height_cm, eye_colour, address)
+      VALUES ('${req.body.licence}', 
+        '${req.body.name}', 
+        '${req.body.birth_date}', 
+        '${req.body.height}', 
+        '${req.body.eye_colour}', 
+        '${req.body.address}');
+*/
+
+--Inserting into police officer table
+
+/*
+INSERT INTO public.police_officer
+    (badge, driver_l,duty_name,rank_name)
+    VALUES
+    (nextval('badge_sequence'), '${req.body.licence}','${req.body.duty_name}','${req.body.duty_rank}');
+*/
+
 /* Delete CASCADE Operation Query */
+
+--Deleting any government officer in the government_officer table using the government_id
+/*
+DELETE FROM goverment_officer 
+	WHERE goverment_id='${req.params.id}';
+*/
 
 /* Delete government officer, cascades to delete row in oversees */
 
 /*
 DELETE FROM public.goverment_officer
 	WHERE goverment_id = '1237';
+*/
+
+--Deleting any complaint in the complaint table using the complaint_id
+/*
+DELETE FROM public.complaint
+   WHERE complaint_id = '${req.params.id}';
 */
 
 /* Delete Complaint from complaint table, cascades to delete complaint from office_review table */
@@ -15,6 +51,14 @@ DELETE FROM public.complaint
 */
 
 /* Update operation Query */
+
+--Updating any row in the suspect table
+/*
+UPDATE public.suspect
+	SET  name='${req.body.name}', birth_date='${req.body.birth_date}', height_cm='${req.body.height}', 
+	eye_colour='${req.body.eye_colour}', address='${req.body.address}'
+	WHERE suspect_id=${req.params.id};
+*/
 
 /* Change the Eye color of the suspect to green*/
 

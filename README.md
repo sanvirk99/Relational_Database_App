@@ -24,5 +24,3 @@ Main database (in PostgreSQL) files of interest are:
  2) SpecialQueries.txt (contains all the queries that are used to meet the Milestone 4/5 requirements (UPDATE, DELETE, JOIN, AGGREGATION,DIVISION, etc)
 
 PDF File contains the answers to the 2 questions, All the required SQL Queries with the data in the tables before and after the query is run on the GUI, Trigger functions and its testing queries.
-
-final commit 8c7c498b82f0c07d9e9504bdaefce3419d932f71
